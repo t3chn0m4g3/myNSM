@@ -1,1 +1,0 @@
-alert ip any any -> any any (msg:"ICMP detected"; sid:2; rev:1;)
