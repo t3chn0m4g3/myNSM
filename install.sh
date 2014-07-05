@@ -148,7 +148,6 @@ chmod 644 /var/log/suricata/eve.json
 $myRED; echo "### Copying prepared configs to destination folders."; $myWHT
 cp oinkmaster.conf /etc/
 cp suricata.yaml /etc/suricata/
-cp test.rules /etc/suricata/rules/
 cp myNSM.json /var/www/kibana/app/dashboards/default.json
 cp myNSM.json /var/www/kibana/app/dashboards/
 chmod 664 /var/www/kibana/app/dashboards/default.json
@@ -157,6 +156,12 @@ chmod 664 /var/www/kibana/app/dashboards/myNSM.json
 # File must be present due to a suricata config bug
 $myRED; echo "### Creating empty threshold.config."; $myWHT
 touch /etc/suricata/threshold.config
+
+# Let's create a test rule, just in case
+$myRED; echo "### Creating test.rules."; $myWHT
+tee /etc/suricata/rules/test.rules <<EOF
+alert ip any any -> any any (msg:"ICMP detected"; sid:2; rev:1;)
+EOF
 
 # Let's pull some rules
 $myRED; echo "### Downloading latest rules."; $myWHT;
