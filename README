@@ -1,4 +1,4 @@
-The script and provided configuration files are provided only for a fresh install of ubuntu server 14.04, x64 edition. Under no circumstances execute the script in production environment. I am not responsible or liable for any damages this script may cause.
+The script and configuration files are provided only for a fresh install of ubuntu server 14.04, x64 edition. Under no circumstances execute the script in production environment. I am not responsible or liable for any damages this script may cause.
 
 The script will install suricata, elastic, logstash and kibana and enable you within a short amount of time to get your own network security monitoring up and running.
 
