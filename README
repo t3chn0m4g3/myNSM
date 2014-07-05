@@ -1,0 +1,13 @@
+The script and provided configuration files are provided only for a fresh install of ubuntu server 14.04, x64 edition. Under no circumstances execute the script in production environment. I am not responsible or liable for any damages this script may cause.
+
+The script will install suricata, elastic, logstash and kibana and enable you within a short amount of time to get your own network security monitoring up and running.
+
+1. Execute the script and answer the questions asked.
+2. Grab some coffee, tea or any beverage you like.
+3. Enjoy the power of Suricata & ELK.
+
+The install script provides you with a basic configuration where RFC1918 networks are defined as your HOME_NET (see /etc/suricata/suricata.yaml). Further documentation is available at http://goo.gl/3BJXI7.
+Oinkmaster will pull rules from Emerging Threats, since they are updated daily and easily accessible (see /etc/oinkmaster.conf). Further documentation is available at http://goo.gl/3BJXI7.
+
+For more information and advanced configuration of your setup please visit the websites of suricata and elk projects. 
+
