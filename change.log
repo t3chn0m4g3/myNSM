@@ -1,0 +1,5 @@
+*** v0.36, 20140713
+- sed patching of /etc/oinkmaster.conf
+- removing oinkmaster.conf from repository
+- updating configuration for ssl access incl. certificate generation
+- sed patching of /var/www/kibana/config.js for ssl access
