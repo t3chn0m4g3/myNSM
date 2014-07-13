@@ -319,6 +319,10 @@ openssl req -new -key mySERVER.key -out myNSM.csr
 openssl x509 -req -days 3650 -in myNSM.csr -signkey mySERVER.key -out myNSM.crt
 mv mySERVER.key myNSM.crt /etc/apache2/
 
+# Let's patch ports.conf to disable listen on port 80
+$myRED; echo "### Patching ports.conf to disable listen on port 80."; $myWHT
+sed -i.bak 's#Listen 80#\#Listen 80#' /etc/apache2/ports.conf
+
 # Let's patch kibana config.js for ssl
 $myRED; echo "### Patching kibana config.js for ssl."; $myWHT
 sed -i.bak 's#elasticsearch: "http://"+window.location.hostname+":9200",#elasticsearch: "https://"+window.location.hostname+"/elasticsearch/",#' /var/www/kibana/config.js
