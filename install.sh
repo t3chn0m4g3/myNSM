@@ -337,6 +337,7 @@ service elasticsearch start
 service logstash start
 
 # Done
-$myRED; echo "### You can access kibana dashboard from your browser via https://your.ip"; $myWHT
+myIP=$(ifconfig $myETH | grep "inet addr:" | awk '{ print $2 }' | cut -d: -f2)
+$myRED; echo "### You can access kibana dashboard from your browser via https://"$myIP; $myWHT
 $myRED; echo "### Done."; $myWHT
 exit 0
