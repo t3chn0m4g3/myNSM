@@ -12,7 +12,7 @@ exec 2> >(tee "install.err")
 exec > >(tee "install.log")
 
 # Let's set some vars
-myETH=""
+myETH="0"
 myRED="tput setaf 1"
 myWHT="tput setaf 7"
 mySURICATAVERSION="2.0.2"
