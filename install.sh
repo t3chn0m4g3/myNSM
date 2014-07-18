@@ -3,7 +3,7 @@
 # Suricata, Elastic Search, Kibana & Logstash          #
 # install script for Ubuntu server 14.04, x64          #
 #                                                      #
-# v0.37 by t3ChN0M4G3, 2014-07-13                      #
+# v0.38 by t3ChN0M4G3, 2014-07-13                      #
 ########################################################
 
 # Let's log for the beauty of it
@@ -11,18 +11,28 @@ set -e
 exec 2> >(tee "install.err")
 exec > >(tee "install.log")
 
-# Let's set some vars
+# Let's define some global vars
 myETH="NIC"
-myRED="tput setaf 1"
-myWHT="tput setaf 7"
 mySURICATAVERSION="2.0.2"
 myKIBANA="https://download.elasticsearch.org/kibana/kibana/kibana-3.1.0.tar.gz"
 myELASTIC="https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.2.2.deb"
 myLOGSTASH="https://download.elasticsearch.org/logstash/logstash/packages/debian/logstash_1.4.2-1-2c0f5a1_all.deb"
 
+# Let's create a function for colorful output
+fuECHO () {
+
+  local myRED=1
+  local myWHT=7
+
+  tput setaf $myRED
+  echo $1 $2
+  tput setaf $myWHT
+
+}
+
 # Let's make sure there is a warning if running for a second time
 if [ -f install.log ];
-  then $myRED; echo "### Running more than once may complicate things. Erase install.log if you are really sure."; $myWHT;
+  then fuECHO "### Running more than once may complicate things. Erase install.log if you are really sure."
   exit 1;
 fi
 
@@ -30,13 +40,13 @@ fi
 while [ "$(ifconfig -s $myETH | grep $myETH -c)" != "1" ]
 do
   ifconfig -s
-  $myRED; echo -n "### Which interface should this sensor be associated with? [eth0] "; read myETH; $myWHT;
+  fuECHO -n "### Which interface should this sensor be associated with? [eth0] "; read myETH;
   if [ "$myETH" = "" ]; then
     myETH="eth0";
   fi
   if [ "$(ifconfig -s $myETH | grep $myETH -c)" = "1" ];
-    then $myRED; echo "### Using "$myETH; $myWHT;
-    else $myRED; echo "### Could not find "$myETH" please try again."; $myWHT;
+    then fuECHO "### Using $myETH";
+    else fuECHO "### Could not find $myETH please try again.";
   fi
 done
 
@@ -49,9 +59,9 @@ do
   myWEBUSER=""
   while true
   do
-    $myRED; echo -n "### Please enter web user name: "; read myWEBUSER; $myWHT;
+    fuECHO -n "### Please enter web user name: "; read myWEBUSER;
       if [ "$myWEBUSER" = "" ];
-       then $myRED; echo "### Web user name may not be blank. "; $myWHT;
+       then fuECHO "### Web user name may not be blank. ";
        else break
       fi
   done
@@ -59,13 +69,13 @@ do
   do
     while true
     do
-      $myRED; echo -n "### Please enter web user password: "; read -s myWEBPASSWD1; $myWHT; echo "";
+      fuECHO -n "### Please enter web user password: "; read -s myWEBPASSWD1;
         if [ "$myWEBPASSWD1" = "" ]; 
-          then $myRED; echo "### Web user password name may not be blank. "; $myWHT;
+          then fuECHO "### Web user password name may not be blank. ";
           else break
         fi
     done
-    $myRED; echo -n "### Please re-enter web user password: "; read -s myWEBPASSWD2; $myWHT; echo "";
+    fuECHO -n "### Please re-enter web user password: "; read -s myWEBPASSWD2;
       if [ "$myWEBPASSWD1" != "$myWEBPASSWD2" ]; 
         then $myRED; echo "### Passwords do not match."; $myWHT;
         else break;
@@ -78,7 +88,7 @@ do
 EOF
   while true;
   do
-    $myRED; echo -n "### Add another user? [yes/no] "; read myMORE; $myWHT;
+    fuECHO -n "### Add another user? [yes/no] "; read myMORE;
     if [ "$myMORE" = "yes" -o "$myMORE" = "no" ] 
       then break;
     fi
@@ -86,17 +96,17 @@ EOF
 done
 
 # Let's add the suricata PPA
-$myRED; echo "### Adding suricata repository."; $myWHT
+fuECHO "### Adding suricata repository."
 add-apt-repository ppa:oisf/suricata-stable -y
 
 # Let's pull some updates
-$myRED; echo "### Pulling Updates."; $myWHT
+fuECHO "### Pulling Updates."
 apt-get update -y
-$myRED; echo "### Installing Updates."; $myWHT
+fuECHO "### Installing Updates."
 apt-get dist-upgrade -y
 
 # Let's install all the packages we need
-$myRED; echo "### Installing packages."; $myWHT
+fuECHO "### Installing packages."
 apt-get install ntp openssl suricata oinkmaster ethtool apache2 apache2-utils openjdk-7-jdk openjdk-7-jre-headless -y
 wget $myKIBANA
 wget $myELASTIC
@@ -107,16 +117,16 @@ dpkg -i elasticsearch-1.2.2.deb
 dpkg -i logstash_1.4.2-1-2c0f5a1_all.deb
 
 # Check for supported suricata version
-$myRED; echo "### Checking for supported suricata version."; $myWHT
+fuECHO "### Checking for supported suricata version."
 if [ "$($(which suricata) -V | grep $mySURICATAVERSION -c)" = "1" ];
-  then $myRED; echo "### Found supported surricata installation."; $myWHT;
-  else $myRED; echo "### Something went wrong, this version of suricata is not supported. Found v"$mySURICATAVERSION"."; $myWHT;
+  then fuECHO "### Found supported surricata installation.";
+  else fuECHO "### Something went wrong, this version of suricata is not supported. Found v$mySURICATAVERSION".;
     exit 1;
 fi
 
 # Time for some housekeeping
 # Let's backup some original files
-$myRED; echo "### Backing up some original files."; $myWHT
+fuECHO "### Backing up some original files."
 mkdir -p /etc/suricata/0ld
 if [ -f /etc/suricata/classification.config ]
   then mv /etc/suricata/classification.config /etc/suricata/0ld/
@@ -135,14 +145,14 @@ if [ -f /var/www/kibana/app/dashboards/default.json ]
 fi
 
 # Let's create some files and folders
-$myRED; echo "### Creating some files and folders."; $myWHT
+fuECHO "### Creating some files and folders."
 mkdir -p /etc/suricata/rules
 mkdir -p /var/log/suricata
 touch /var/log/suricata/eve.json
 chmod 644 /var/log/suricata/eve.json
 
 # Let's replace some files
-$myRED; echo "### Copying prepared configs to destination folders."; $myWHT
+fuECHO "### Copying prepared configs to destination folders."
 cp suricata.yaml /etc/suricata/
 cp myNSM.json /var/www/kibana/app/dashboards/default.json
 cp myNSM.json /var/www/kibana/app/dashboards/
@@ -150,31 +160,31 @@ chmod 664 /var/www/kibana/app/dashboards/default.json
 chmod 664 /var/www/kibana/app/dashboards/myNSM.json
 
 # File must be present due to a suricata config bug
-$myRED; echo "### Creating empty threshold.config."; $myWHT
+fuECHO "### Creating empty threshold.config."
 touch /etc/suricata/threshold.config
 
 # Let's create a test rule, just in case
-$myRED; echo "### Creating test.rules."; $myWHT
+fuECHO "### Creating test.rules."
 tee /etc/suricata/rules/test.rules <<EOF
 alert ip any any -> any any (msg:"ICMP detected"; sid:2; rev:1;)
 EOF
 
 # Let's patch oinkmaster.conf with update url
-$myRED; echo "### Patching oinkmaster.conf with update url."; $myWHT
+fuECHO "### Patching oinkmaster.conf with update url."
 sed -i.bak 's#\# url = http://www.bleedingsnort.com/downloads/bleeding.rules.tar.gz#url = http://rules.emergingthreats.net/open/suricata/emerging.rules.tar.gz#' /etc/oinkmaster.conf
 
 # Let's pull some rules
-$myRED; echo "### Downloading latest rules."; $myWHT;
+fuECHO "### Downloading latest rules."
 myOINKMASTER=$(which oinkmaster)
 if [ -x $myOINKMASTER ];
-  then $myRED; echo "### Found oinkmaster, now pulling some rules."; $myWHT;
+  then fuECHO "### Found oinkmaster, now pulling some rules."
     $myOINKMASTER -C /etc/oinkmaster.conf -o /etc/suricata/rules/;
-  else $myRED; echo "### Could not find Oinkmaster, something went wrong."; $myWHT;
+  else fuECHO "### Could not find Oinkmaster, something went wrong."
     exit 1
 fi
 
 # Let's make sure there is no checksuming and offloading
-$myred; echo "### Making sure NIC offloading and checksuming is disabled"; $myWHT;
+fuECHO "### Making sure NIC offloading and checksuming is disabled.";
 ethtool --offload $myETH rx off tx off
 ethtool -K $myETH gso off gro off
 
@@ -193,7 +203,7 @@ EOF
 chmod 755 /etc/rc.local
 
 # Let's make sure the rules will be checked / updated on a daily basis
-$myRED; echo "### Creating oinkmaster cron.job in crontab."; $myWHT
+fuECHO "### Creating oinkmaster cron.job in crontab."
 cp /etc/crontab /etc/crontab.backup
 tee -a /etc/crontab <<EOF
 
@@ -206,7 +216,7 @@ tee -a /etc/crontab <<EOF
 EOF
 
 # Let's create a suricata upstart config
-$myRED; echo "### Creating suricata upstart config."; $myWHT
+fuECHO "### Creating suricata upstart config."
 tee /etc/init/suricata.conf <<EOF
 # Suricata
 description "Intruder Detection System Daemon" 
@@ -217,7 +227,7 @@ exec suricata -D --pidfile /var/run/suricata.pid -c /etc/suricata/suricata.yaml 
 EOF
 
 # Let's create a logstash config
-$myRED; echo "### Creating logstash config."; $myWHT
+fuECHO "### Creating logstash config."
 tee /etc/logstash/conf.d/logstash.conf <<EOF
 input {
   file {
@@ -257,6 +267,7 @@ output {
 EOF
 
 # Let's prepare apache for a new site and auth-digest
+fuECHO "### Setting up apache configuration."
 a2enmod auth_digest proxy proxy_http ssl
 mv myNSM.pwd /etc/apache2/
 tee /etc/apache2/sites-available/myNSM-ssl.conf <<EOF
@@ -313,22 +324,22 @@ a2ensite myNSM-ssl.conf
 a2dissite 000-default.conf
 
 # Let's create the webserver certificates
-$myRED; echo "### Creating certificates."; $myWHT
+fuECHO "### Creating certificates."
 openssl genrsa -out mySERVER.key 8192
 openssl req -new -key mySERVER.key -out myNSM.csr
 openssl x509 -req -days 3650 -in myNSM.csr -signkey mySERVER.key -out myNSM.crt
 mv mySERVER.key myNSM.crt /etc/apache2/
 
 # Let's patch ports.conf to disable listen on port 80
-$myRED; echo "### Patching ports.conf to disable listen on port 80."; $myWHT
+fuECHO "### Patching ports.conf to disable listen on port 80."
 sed -i.bak 's#Listen 80#\#Listen 80#' /etc/apache2/ports.conf
 
 # Let's patch kibana config.js for ssl
-$myRED; echo "### Patching kibana config.js for ssl."; $myWHT
+fuECHO "### Patching kibana config.js for ssl."
 sed -i.bak 's#elasticsearch: "http://"+window.location.hostname+":9200",#elasticsearch: "https://"+window.location.hostname+"/elasticsearch/",#' /var/www/kibana/config.js
 
 # Let's configure automatic start of services
-$myRED; echo "### Configuring automatic start of services."; $myWHT
+fuECHO "### Configuring automatic start of services."
 update-rc.d elasticsearch defaults 95 10
 update-rc.d logstash defaults
 service suricata start
@@ -338,6 +349,6 @@ service logstash start
 
 # Done
 myIP=$(ifconfig $myETH | grep "inet addr:" | awk '{ print $2 }' | cut -d: -f2)
-$myRED; echo "### You can access kibana dashboard from your browser via https://"$myIP; $myWHT
-$myRED; echo "### Done."; $myWHT
+fuECHO "### You can access kibana dashboard from your browser via https://$myIP"
+fuECHO "### Done."
 exit 0
