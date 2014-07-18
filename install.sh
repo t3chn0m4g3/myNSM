@@ -3,7 +3,7 @@
 # Suricata, Elastic Search, Kibana & Logstash          #
 # install script for Ubuntu server 14.04, x64          #
 #                                                      #
-# v0.36 by t3ChN0M4G3, 2014-07-13                      #
+# v0.37 by t3ChN0M4G3, 2014-07-13                      #
 ########################################################
 
 # Let's log for the beauty of it
@@ -97,7 +97,7 @@ apt-get dist-upgrade -y
 
 # Let's install all the packages we need
 $myRED; echo "### Installing packages."; $myWHT
-apt-get install openssl suricata oinkmaster ethtool apache2 apache2-utils openjdk-7-jdk openjdk-7-jre-headless -y
+apt-get install ntp openssl suricata oinkmaster ethtool apache2 apache2-utils openjdk-7-jdk openjdk-7-jre-headless -y
 wget $myKIBANA
 wget $myELASTIC
 wget $myLOGSTASH
