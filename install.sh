@@ -23,7 +23,7 @@ fuECHO () {
   local myRED=1
   local myWHT=7
   tput setaf $myRED
-  echo $@
+  echo $1 "$2"
   tput setaf $myWHT
 }
 
