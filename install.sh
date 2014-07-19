@@ -12,7 +12,7 @@ exec 2> >(tee "install.err")
 exec > >(tee "install.log")
 
 # Let's define some global vars
-myETH="NIC"
+myETH=""
 mySURICATAVERSION="2.0.2"
 myKIBANA="https://download.elasticsearch.org/kibana/kibana/kibana-3.1.0.tar.gz"
 myELASTIC="https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.2.2.deb"
@@ -20,14 +20,11 @@ myLOGSTASH="https://download.elasticsearch.org/logstash/logstash/packages/debian
 
 # Let's create a function for colorful output
 fuECHO () {
-
   local myRED=1
   local myWHT=7
-
   tput setaf $myRED
   echo $@
   tput setaf $myWHT
-
 }
 
 # Let's make sure there is a warning if running for a second time
@@ -36,19 +33,14 @@ if [ -f install.log ];
   exit 1;
 fi
 
-# Let's ask for NIC and check existence
-while [ "$(ifconfig -s $myETH | grep $myETH -c)" != "1" ]
-do
-  ifconfig -s
-  fuECHO -n "### Which interface should this sensor be associated with? [eth0] "; read myETH;
-  if [ "$myETH" = "" ]; then
-    myETH="eth0";
-  fi
-  if [ "$(ifconfig -s $myETH | grep $myETH -c)" = "1" ];
-    then fuECHO "### Using $myETH";
-    else fuECHO "### Could not find $myETH please try again.";
-  fi
-done
+# Let's detect NIC and set it up
+fuECHO -n "### Detecting NIC and setting it up"
+myNICS=$(ifconfig -s | awk '{print $1}' | grep -iv iface | grep -iv lo)
+myIFCOUNT=$(ifconfig -s | awk '{print $1}' | grep -iv iface | grep -iv lo | wc -w)
+if [ "$myIFCOUNT" = "1" ];
+  then echo "### Only one interface found. Using $myNICS for installation";
+  myETH=$myNICS
+fi
 
 # Let's ask for web user and password and create htdigest-md5 output
 while [ "$myMORE" != "no" ]
