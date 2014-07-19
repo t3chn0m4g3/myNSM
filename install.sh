@@ -61,13 +61,13 @@ do
   do
     while true
     do
-      fuECHO -n "### Please enter web user password: "; read -s myWEBPASSWD1;
+      fuECHO -n "### Please enter web user password: "; read -s myWEBPASSWD1; echo ""
         if [ "$myWEBPASSWD1" = "" ]; 
           then fuECHO "### Web user password name may not be blank. ";
           else break
         fi
     done
-    fuECHO -n "### Please re-enter web user password: "; read -s myWEBPASSWD2;
+    fuECHO -n "### Please re-enter web user password: "; read -s myWEBPASSWD2; echo ""
       if [ "$myWEBPASSWD1" != "$myWEBPASSWD2" ]; 
         then $myRED; echo "### Passwords do not match."; $myWHT;
         else break;
