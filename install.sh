@@ -34,11 +34,11 @@ if [ -f install.log ];
 fi
 
 # Let's detect NIC and set it up
-fuECHO -n "### Detecting NIC and setting it up"
+fuECHO "### Detecting NIC and setting it up"
 myNICS=$(ifconfig -s | awk '{print $1}' | grep -iv iface | grep -iv lo)
 myIFCOUNT=$(ifconfig -s | awk '{print $1}' | grep -iv iface | grep -iv lo | wc -w)
 if [ "$myIFCOUNT" = "1" ];
-  then echo "### Only one interface found. Using $myNICS for installation";
+  then fuECHO "### Only one interface found. Using $myNICS for installation";
   myETH=$myNICS
 fi
 
