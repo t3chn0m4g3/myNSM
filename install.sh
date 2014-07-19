@@ -3,7 +3,7 @@
 # Suricata, Elastic Search, Kibana & Logstash          #
 # install script for Ubuntu server 14.04, x64          #
 #                                                      #
-# v0.38 by t3ChN0M4G3, 2014-07-13                      #
+# v0.38 by t3ChN0M4G3, 2014-07-19                      #
 ########################################################
 
 # Let's log for the beauty of it
