@@ -15,7 +15,7 @@ exec > >(tee "install.log")
 myETH=""
 mySURICATAVERSION="2.0.2"
 myKIBANA="https://download.elasticsearch.org/kibana/kibana/kibana-3.1.0.tar.gz"
-myELASTIC="https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.2.2.deb"
+myELASTIC="https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.3.2.deb"
 myLOGSTASH="https://download.elasticsearch.org/logstash/logstash/packages/debian/logstash_1.4.2-1-2c0f5a1_all.deb"
 
 # Let's create a function for colorful output
@@ -105,7 +105,7 @@ wget $myELASTIC
 wget $myLOGSTASH
 tar -C /var/www/ -xzf kibana-3.1.0.tar.gz
 mv /var/www/kibana-3.1.0/ /var/www/kibana/
-dpkg -i elasticsearch-1.2.2.deb
+dpkg -i elasticsearch-1.3.2.deb
 dpkg -i logstash_1.4.2-1-2c0f5a1_all.deb
 
 # Check for supported suricata version
