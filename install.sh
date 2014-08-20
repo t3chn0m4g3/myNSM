@@ -3,7 +3,7 @@
 # Suricata, Elastic Search, Kibana & Logstash          #
 # install script for Ubuntu server 14.04, x64          #
 #                                                      #
-# v0.38 by t3ChN0M4G3, 2014-07-19                      #
+# v0.39 by t3ChN0M4G3, 2014-08-20                      #
 ########################################################
 
 # Let's log for the beauty of it
@@ -13,7 +13,7 @@ exec > >(tee "install.log")
 
 # Let's define some global vars
 myETH=""
-mySURICATAVERSION="2.0.2"
+mySURICATAVERSION="2.0.3"
 myKIBANA="https://download.elasticsearch.org/kibana/kibana/kibana-3.1.0.tar.gz"
 myELASTIC="https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.3.2.deb"
 myLOGSTASH="https://download.elasticsearch.org/logstash/logstash/packages/debian/logstash_1.4.2-1-2c0f5a1_all.deb"
