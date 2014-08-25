@@ -3,7 +3,7 @@
 # Suricata, Elastic Search, Kibana & Logstash          #
 # install script for Ubuntu server 14.04, x64          #
 #                                                      #
-# v0.39 by t3ChN0M4G3, 2014-08-20                      #
+# v0.40 by t3ChN0M4G3, 2014-08-25                      #
 ########################################################
 
 # Let's log for the beauty of it
@@ -91,6 +91,10 @@ done
 fuECHO "### Adding suricata repository."
 add-apt-repository ppa:oisf/suricata-stable -y
 
+# Let's add the ajenti PPA
+wget http://repo.ajenti.org/debian/key -O- | apt-key add -
+add-apt-repository "deb http://repo.ajenti.org/ng/debian main main ubuntu"
+
 # Let's pull some updates
 fuECHO "### Pulling Updates."
 apt-get update -y
@@ -99,7 +103,7 @@ apt-get dist-upgrade -y
 
 # Let's install all the packages we need
 fuECHO "### Installing packages."
-apt-get install ntp openssl suricata oinkmaster ethtool apache2 apache2-utils openjdk-7-jdk openjdk-7-jre-headless -y
+apt-get install ntp openssl suricata oinkmaster ethtool apache2 apache2-utils openjdk-7-jdk openjdk-7-jre-headless ajenti -y
 wget $myKIBANA
 wget $myELASTIC
 wget $myLOGSTASH
@@ -342,5 +346,6 @@ service logstash start
 # Done
 myIP=$(ifconfig $myETH | grep "inet addr:" | awk '{ print $2 }' | cut -d: -f2)
 fuECHO "### You can access kibana dashboard from your browser via https://$myIP"
+fuECHO "### You can access ubuntu from your browser via https://$myIP:8000 (root/admin - you should change that!)"
 fuECHO "### Done."
 exit 0
