@@ -17,6 +17,7 @@ mySURICATAVERSION="2.0.3"
 myKIBANA="https://download.elasticsearch.org/kibana/kibana/kibana-3.1.0.tar.gz"
 myELASTIC="https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.3.2.deb"
 myLOGSTASH="https://download.elasticsearch.org/logstash/logstash/packages/debian/logstash_1.4.2-1-2c0f5a1_all.deb"
+myWEBMIN="http://prdownloads.sourceforge.net/webadmin/webmin_1.700_all.deb"
 
 # Let's create a function for colorful output
 fuECHO () {
@@ -91,26 +92,30 @@ done
 fuECHO "### Adding suricata repository."
 add-apt-repository ppa:oisf/suricata-stable -y
 
-# Let's add the ajenti PPA
-wget http://repo.ajenti.org/debian/key -O- | apt-key add -
-add-apt-repository "deb http://repo.ajenti.org/ng/debian main main ubuntu"
-
 # Let's pull some updates
 fuECHO "### Pulling Updates."
 apt-get update -y
 fuECHO "### Installing Updates."
 apt-get dist-upgrade -y
 
+# Test Scirius
+#apt-get install python-pip
+#pip install django django-tables2 South GitPython pyinotify daemon Pygments
+#git clone https://github.com/stamusnetworks/scirius
+#python manage.py syncdb
+
 # Let's install all the packages we need
 fuECHO "### Installing packages."
-apt-get install ntp openssl suricata oinkmaster ethtool apache2 apache2-utils openjdk-7-jdk openjdk-7-jre-headless ajenti -y
+apt-get install ntp openssl suricata oinkmaster ethtool apache2 apache2-utils openjdk-7-jdk openjdk-7-jre-headless libnet-ssleay-perl libauthen-pam-perl libio-pty-perl apt-show-versions libapt-pkg-perl -y
 wget $myKIBANA
 wget $myELASTIC
 wget $myLOGSTASH
+wget $myWEBMIN
 tar -C /var/www/ -xzf kibana-3.1.0.tar.gz
 mv /var/www/kibana-3.1.0/ /var/www/kibana/
 dpkg -i elasticsearch-1.3.2.deb
 dpkg -i logstash_1.4.2-1-2c0f5a1_all.deb
+dpkg -i webmin_1.700_all.deb
 
 # Check for supported suricata version
 fuECHO "### Checking for supported suricata version."
@@ -346,6 +351,6 @@ service logstash start
 # Done
 myIP=$(ifconfig $myETH | grep "inet addr:" | awk '{ print $2 }' | cut -d: -f2)
 fuECHO "### You can access kibana dashboard from your browser via https://$myIP"
-fuECHO "### You can access ubuntu from your browser via https://$myIP:8000 (root/admin - you should change that!)"
+fuECHO "### You can configure this machine from your browser via https://$myIP:10000"
 fuECHO "### Done."
 exit 0
